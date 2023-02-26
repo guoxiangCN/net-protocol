@@ -160,7 +160,7 @@ extern "C" {
     pub fn pcap_file(p: pcap_t) -> *mut libc::FILE;
 
     /// Return statistics on current capture.
-    pub fn pcap_stats(p: pcap_t, ps: *mut pcap_stat)-> libc::c_int;
+    pub fn pcap_stats(p: pcap_t, ps: *mut pcap_stat) -> libc::c_int;
 
     ///print the text of the last pcap library error on stderr, prefixed by prefix.
     pub fn pcap_perror(p: pcap_t, prefix: *mut libc::c_char);
@@ -229,13 +229,6 @@ pub struct _pcap_addr {
 }
 
 #[repr(C)]
-#[derive(Debug, Default, Clone, Copy)]
-pub struct sockaddr {
-    pub sa_family: u16,
-    pub sa_data: [u8; 14],
-}
-
-#[repr(C)]
 #[derive(Debug)]
 pub struct pcap_stat {
     pub ps_recv: libc::c_uint,
@@ -243,3 +236,38 @@ pub struct pcap_stat {
     pub ps_ifdrop: libc::c_uint,
     pub bs_capt: libc::c_uint,
 }
+
+#[repr(C)]
+#[derive(Debug, Default, Clone, Copy)]
+pub struct sockaddr {
+    pub sa_family: u16,
+    pub sa_data: [u8; 14],
+}
+
+impl sockaddr {
+    fn as_sockaddr_in(&self) -> sockaddr_in {
+        assert_eq!(
+            std::mem::size_of::<sockaddr>(),
+            std::mem::size_of::<sockaddr_in>()
+        );
+        let addr = self.clone();
+        unsafe { *(&addr as *const sockaddr as *const sockaddr_in) }
+    }
+}
+
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct sockaddr_in {
+    pub sa_family: libc::c_ushort,
+    pub sin_port: libc::c_ushort,
+    pub sin_addr: in_addr,
+    pub sin_zero: [libc::c_uchar; 8],
+}
+
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct in_addr {}
+
+// pub union S_un {
+
+// }

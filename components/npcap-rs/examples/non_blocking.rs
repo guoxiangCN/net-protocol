@@ -4,7 +4,7 @@ fn main() {
 
     let dev = devs
         .devices()
-        .find(|dev| dev.desc.as_ref().unwrap() == "Realtek(R) PCI(e) Ethernet Controller");
+        .find(|dev| dev.desc.as_ref().unwrap() == "Intel(R) Ethernet Controller (3) I225-V");
 
     if let Some(dev) = dev {
         let (listener, _) = dev.open(None).unwrap();

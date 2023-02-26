@@ -3,7 +3,6 @@
 //!
 
 fn main() {
-
     println!("Libpcap version: {}", npcap_rs::version());
     let pcap = npcap_rs::PCap::new().unwrap();
     let dev = pcap.find_device("Wireless");

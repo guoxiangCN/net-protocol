@@ -1,17 +1,22 @@
 //! Bindings to npcap
 //!
 //! (c) 2021, Subconscious Compute
-
+pub mod defs;
+pub mod errors;
 pub mod helper;
+
 #[allow(dead_code, unused_imports)]
 pub mod raw;
 
 #[cfg(feature = "dns-parse")]
 pub mod dns;
 
-use std::ffi::CStr;
-use std::sync::mpsc;
 
+pub mod socket_api;
+
+use std::ffi::CStr;
+
+use defs::AF_INET;
 use helper::parse_raw;
 
 /// container that allows for interfacing with network devices
@@ -88,12 +93,27 @@ impl Drop for PCap {
     }
 }
 
-#[derive(Debug)]
+/// Representation of an interface address.
+#[derive(Debug, Clone)]
 pub struct Address {
+    /// address
     pub addr: Option<raw::sockaddr>,
+
+    /// netmask for that address
     pub netmask: Option<raw::sockaddr>,
+
+    /// broadcast address for that address
     pub broad_addr: Option<raw::sockaddr>,
+
+    /// P2P destination address for that address
     pub dst_addr: Option<raw::sockaddr>,
+}
+
+impl Address {
+    pub fn is_ipv4(&self) -> bool {
+        let addr = self.addr.clone().unwrap();
+        addr.sa_family == AF_INET
+    }
 }
 
 /// Represents a physical network interface i.e ethernet NIC/Wifi Card, etc...
@@ -190,6 +210,11 @@ impl Device {
     pub fn is_in_use(&self) -> bool {
         self.is_connected() & self.is_up() && self.is_running()
     }
+
+    // get address
+    pub fn maybe_address(&self) -> Option<Address> {
+        self.addresses.clone()
+    }
 }
 
 pub fn open_device(dev: &str, chan_size: Option<usize>) -> Option<(Listener, helper::Rx<Packet>)> {
@@ -272,7 +297,7 @@ pub struct TCPPacket {
 #[derive(Debug)]
 pub struct UDPPacket {
     pub hdr: udp::UdpHeader,
-    pub data: UDPApp
+    pub data: UDPApp,
 }
 
 #[derive(Debug)]

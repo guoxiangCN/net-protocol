@@ -1,0 +1,20 @@
+[package]
+name = "npcap-rs"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+libc = "0.2"
+pktparse = "0.7.1"
+http-bytes = { version = "0.1.0", optional = true }
+crossbeam-channel = { version = "0.5.6" }
+dns-parser = { version = "0.8.0", optional = true }
+
+[features]
+# http-parse = ["dep:http-bytes"]
+# dns-parse = ["dep:dns-parser"]
+
+[build-dependencies]
+bindgen = "0.60.1"

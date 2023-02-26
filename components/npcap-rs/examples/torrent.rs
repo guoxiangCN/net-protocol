@@ -1,7 +1,7 @@
 //! Sniffing Bittorrent connections using npcap
 //! Author: David <david.j@subcom.tech>
 //!
-//! This is a very naive approach that only checks if the connections 
+//! This is a very naive approach that only checks if the connections
 //! are in a given range mostly used by bittorrent.
 //!
 
@@ -22,8 +22,9 @@ fn main() {
         let bt_ports = 6881..=6889;
 
         while let Ok(pack) = rx.recv() {
-            if let Some(tcp) =  pack.tcp {
-                if bt_ports.contains(&tcp.hdr.source_port) || bt_ports.contains(&tcp.hdr.dest_port) {
+            if let Some(tcp) = pack.tcp {
+                if bt_ports.contains(&tcp.hdr.source_port) || bt_ports.contains(&tcp.hdr.dest_port)
+                {
                     println!("{} -> {}", pack.ip_hdr.source_addr, pack.ip_hdr.dest_addr);
                 }
             }

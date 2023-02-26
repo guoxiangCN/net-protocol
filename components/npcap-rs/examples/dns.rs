@@ -3,7 +3,6 @@
 //!
 
 fn main() {
-
     println!("Libpcap version: {}", npcap_rs::version());
     let pcap = npcap_rs::PCap::new().unwrap();
     let dev = pcap.find_device("Wireless");
@@ -15,7 +14,7 @@ fn main() {
         listener.run();
 
         while let Ok(pack) = rx.recv() {
-            if let Some(udp) =  pack.udp {
+            if let Some(udp) = pack.udp {
                 match udp.data {
                     npcap_rs::UDPApp::DNS(d) => println!("{:?}", d),
                     _ => {}

@@ -7,7 +7,6 @@
 Packet { header: Header { id: 59244, query: false, opcode: StandardQuery, authoritative: false, truncated: false, recursion_desired: true, recursion_available: true, authenticated_data: false, checking_disabled: false, response_code: NoError, questions: 1, answers: 0, nameservers: 1, additional: 0 }, questions: [Question { qname: Name("prod-tp.sumo.mozit.cloud"), prefer_unicast: false, qtype: AAAA, qclass: IN }], answers: [], nameservers: [ResourceRecord { name: Name("sumo.mozit.cloud"), multicast_unique: false, cls: IN, ttl: 600, data: SOA(Record { primary_ns: Name("ns-1513.awsdns-61.org"), mailbox: Name("awsdns-hostmaster.amazon.com"), serial: 1, refresh: 7200, retry: 900, expire: 1209600, minimum_ttl: 86400 }) }], additional: [], opt: None }
  */
 
-
 //#[derive(Serialize, Deserialize, Debug)]
 #[derive(Debug)]
 pub struct Question {
@@ -45,8 +44,7 @@ pub enum Data {
     PTR(String),
     SOA(Soa),
     SRV(u16, u16, u16, String),
-    TXT
-    //TXT(Vec<u8>),
+    TXT, //TXT(Vec<u8>),
 }
 
 #[derive(Debug)]
@@ -87,11 +85,13 @@ pub fn from_packet(packet: &dns_parser::Packet) -> DNSInfo {
                 expire: a.expire,
                 min_ttl: a.minimum_ttl,
             }),
-            dns_parser::RData::SRV(a) => Data::SRV(a.priority, a.weight, a.port, a.target.to_string()),
-            dns_parser::RData::TXT(a) =>  {
+            dns_parser::RData::SRV(a) => {
+                Data::SRV(a.priority, a.weight, a.port, a.target.to_string())
+            }
+            dns_parser::RData::TXT(a) => {
                 // idk what to do here honestly
                 Data::TXT
-            },
+            }
             _ => panic!("Eh"),
         };
 
@@ -102,7 +102,6 @@ pub fn from_packet(packet: &dns_parser::Packet) -> DNSInfo {
             ttl: ans.ttl,
         });
     }
-
 
     for nameserver in &packet.nameservers {
         let data = match &nameserver.data {
@@ -121,11 +120,13 @@ pub fn from_packet(packet: &dns_parser::Packet) -> DNSInfo {
                 expire: a.expire,
                 min_ttl: a.minimum_ttl,
             }),
-            dns_parser::RData::SRV(a) => Data::SRV(a.priority, a.weight, a.port, a.target.to_string()),
-            dns_parser::RData::TXT(a) =>  {
+            dns_parser::RData::SRV(a) => {
+                Data::SRV(a.priority, a.weight, a.port, a.target.to_string())
+            }
+            dns_parser::RData::TXT(a) => {
                 // idk what to do here honestly
                 Data::TXT
-            },
+            }
             _ => panic!("Eh"),
         };
 

@@ -72,7 +72,7 @@ pub fn parse_raw(data: &[u8]) -> Option<crate::Packet> {
                     pktparse::ip::IPProtocol::UDP => {
                         if let Ok((remaining, hdr)) = pktparse::udp::parse_udp_header(remaining) {
                             let data = if !remaining.is_empty() {
-                                #[cfg(feature = "dns-parse")] 
+                                #[cfg(feature = "dns-parse")]
                                 {
                                     if let Ok(dns) = dns_parser::Packet::parse(remaining) {
                                         crate::UDPApp::DNS(crate::dns::from_packet(&dns))
@@ -80,7 +80,8 @@ pub fn parse_raw(data: &[u8]) -> Option<crate::Packet> {
                                         crate::UDPApp::Generic(Some(remaining.to_vec()))
                                     }
                                 }
-                                #[cfg(not(feature = "dns-parse"))] {
+                                #[cfg(not(feature = "dns-parse"))]
+                                {
                                     // might be expensive `.to_vec` call
                                     crate::UDPApp::Generic(Some(remaining.to_vec()))
                                 }
@@ -88,7 +89,7 @@ pub fn parse_raw(data: &[u8]) -> Option<crate::Packet> {
                                 crate::UDPApp::Generic(None)
                             };
 
-                            let mut pack = crate::UDPPacket { hdr, data };
+                            let pack = crate::UDPPacket { hdr, data };
                             packet.app_prot = ApplicationProtocol::UDP;
                             packet.udp = Some(pack);
                         }
