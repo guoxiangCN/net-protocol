@@ -12,7 +12,7 @@ pub mod socket_api;
 
 use std::ffi::CStr;
 
-use defs::{AF_INET, PCAP_IF_LOOPBACK, PCAP_IF_RUNNING, PCAP_IF_UP, PCAP_IF_WIRELESS};
+use defs::{AF_INET, PCAP_IF_LOOPBACK, PCAP_IF_RUNNING, PCAP_IF_UP, PCAP_IF_WIRELESS, PCAP_IF_CONNECTION_STATUS_CONNECTED};
 use helper::parse_raw;
 
 /// container that allows for interfacing with network devices
@@ -196,12 +196,13 @@ impl Device {
 
     /// interface is wireless (*NOT* necessarily Wi-Fi!)
     pub fn is_wifi(&self) -> bool {
+        // TODO: maybe bluetooth
         self.is_flag_set(PCAP_IF_WIRELESS)
     }
 
     /// connected
     pub fn is_connected(&self) -> bool {
-        self.is_flag_set(0x0000_0010)
+        self.is_flag_set(PCAP_IF_CONNECTION_STATUS_CONNECTED)
     }
 
     /// up and running.

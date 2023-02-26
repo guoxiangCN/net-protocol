@@ -12,6 +12,11 @@ pub const PCAP_IF_LOOPBACK: u32 = 0x00000001; /* interface is loopback */
 pub const PCAP_IF_UP: u32 = 0x00000002; /* interface is up */
 pub const PCAP_IF_RUNNING: u32 = 0x00000004; /* interface is running */
 pub const PCAP_IF_WIRELESS: u32 = 0x00000008; /* interface is wireless (*NOT* necessarily Wi-Fi!) */
+pub const PCAP_IF_CONNECTION_STATUS: u32 = 0x00000030; /* connection status: */
+pub const PCAP_IF_CONNECTION_STATUS_UNKNOWN: u32 = 0x0000000000; /* unknown */
+pub const PCAP_IF_CONNECTION_STATUS_CONNECTED: u32 = 0x00000010; /* connected */
+pub const PCAP_IF_CONNECTION_STATUS_DISCONNECTED: u32 = 0x00000020; /* disconnected */
+pub const PCAP_IF_CONNECTION_STATUS_NOT_APPLICABLE: u32 = 0x00000030; /* not applicable */
 
 //
 // Although AF_UNSPEC is defined for backwards compatibility, using
