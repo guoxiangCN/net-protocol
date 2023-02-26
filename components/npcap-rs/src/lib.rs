@@ -50,10 +50,8 @@ impl PCap {
 
     /// Open all the interfaces for packet capture. Only works on Linux
     #[cfg(target_os = "linux")]
-    pub fn open_all(&self) -> Option<(Listener, recv!(raw::HeaderType))> {
-        use helper::recv;
-
-        open_device("rpcap://any")
+    pub fn open_all(&self) -> Option<(Listener,helper::Rx<Packet>)> {
+        open_device("rpcap://any", None)
     }
 
     /// Return a single device. If environment variable NPCAP_DEVICE_HINT is set, a
