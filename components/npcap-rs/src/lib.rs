@@ -4,19 +4,15 @@
 pub mod defs;
 pub mod errors;
 pub mod helper;
-
 #[allow(dead_code, unused_imports)]
 pub mod raw;
-
 #[cfg(feature = "dns-parse")]
 pub mod dns;
-
-
 pub mod socket_api;
 
 use std::ffi::CStr;
 
-use defs::AF_INET;
+use defs::{AF_INET, PCAP_IF_LOOPBACK, PCAP_IF_RUNNING, PCAP_IF_UP, PCAP_IF_WIRELESS};
 use helper::parse_raw;
 
 /// container that allows for interfacing with network devices
@@ -50,7 +46,7 @@ impl PCap {
 
     /// Open all the interfaces for packet capture. Only works on Linux
     #[cfg(target_os = "linux")]
-    pub fn open_all(&self) -> Option<(Listener,helper::Rx<Packet>)> {
+    pub fn open_all(&self) -> Option<(Listener, helper::Rx<Packet>)> {
         open_device("rpcap://any", None)
     }
 
@@ -186,17 +182,21 @@ impl Device {
 
     /// Interface is up
     pub fn is_up(&self) -> bool {
-        self.is_flag_set(0x0000_0002)
+        self.is_flag_set(PCAP_IF_UP)
     }
 
     /// Interface is running.
     pub fn is_running(&self) -> bool {
-        self.is_flag_set(0x0000_0004)
+        self.is_flag_set(PCAP_IF_RUNNING)
+    }
+
+    pub fn is_loopback(&self) -> bool {
+        self.is_flag_set(PCAP_IF_LOOPBACK)
     }
 
     /// interface is wireless (*NOT* necessarily Wi-Fi!)
     pub fn is_wifi(&self) -> bool {
-        self.is_flag_set(0x0000_0008)
+        self.is_flag_set(PCAP_IF_WIRELESS)
     }
 
     /// connected

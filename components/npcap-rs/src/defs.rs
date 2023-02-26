@@ -11,6 +11,7 @@
 pub const PCAP_IF_LOOPBACK: u32 = 0x00000001; /* interface is loopback */
 pub const PCAP_IF_UP: u32 = 0x00000002; /* interface is up */
 pub const PCAP_IF_RUNNING: u32 = 0x00000004; /* interface is running */
+pub const PCAP_IF_WIRELESS: u32 = 0x00000008; /* interface is wireless (*NOT* necessarily Wi-Fi!) */
 
 //
 // Although AF_UNSPEC is defined for backwards compatibility, using
@@ -20,8 +21,7 @@ pub const PCAP_IF_RUNNING: u32 = 0x00000004; /* interface is running */
 // to include more and more address families that use overlapping
 // protocol values there is more and more chance of choosing an
 // undesired address family when AF_UNSPEC is used.
-//
-
+pub const AF_UNSPEC: u16 = 0; // unspecified
 pub const AF_UNIX: u16 = 1; // local to host (pipes, portals)
 pub const AF_INET: u16 = 2; // internetwork: UDP, TCP, etc.
 pub const AF_INET6: u16 = 23; // Internetwork Version 6
